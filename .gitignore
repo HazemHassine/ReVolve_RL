@@ -1,0 +1,14 @@
+# Local gitignore for Revolve
+venv/
+__pycache__/
+*.pyc
+*.zip
+*.png
+*.gif
+.idea/
+revolve.egg-info/
+database/
+logs/
+outputs/
+temp_*
+debug.log

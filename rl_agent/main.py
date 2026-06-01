@@ -160,16 +160,29 @@ def run_training(
     velocity_file,
     output_path,
     log_dir,
+    env_name="HumanoidEnv",
 ):
-    gymenv = HumanoidEnv(
-        reward_func_str=reward_func,
-        counter=counter,
-        generation_id=generation_id,
-        island_id=island_id,
-        reward_history_file=reward_history_file,
-        model_checkpoint_file=model_checkpoint_file,
-        velocity_file=velocity_file,
-    )
+    if env_name == "AntEnv":
+        from rl_agent.AntEnv import AntEnv
+        gymenv = AntEnv(
+            reward_func_str=reward_func,
+            counter=counter,
+            generation_id=generation_id,
+            island_id=island_id,
+            reward_history_file=reward_history_file,
+            model_checkpoint_file=model_checkpoint_file,
+            velocity_file=velocity_file,
+        )
+    else:
+        gymenv = HumanoidEnv(
+            reward_func_str=reward_func,
+            counter=counter,
+            generation_id=generation_id,
+            island_id=island_id,
+            reward_history_file=reward_history_file,
+            model_checkpoint_file=model_checkpoint_file,
+            velocity_file=velocity_file,
+        )
     sb3_algo = "SAC"
 
     env = Monitor(gymenv)  # Ensure monitoring

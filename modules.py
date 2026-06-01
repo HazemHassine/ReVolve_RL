@@ -10,7 +10,7 @@ import json
 import multiprocessing
 import os
 import time
-from typing import Tuple, Optional, Dict
+from typing import Tuple, Optional, Dict, List
 
 import absl.logging as logging
 import hydra
@@ -33,7 +33,7 @@ class RewardFunctionGeneration:
         # TODO: change system message based on Eureka
         self.system_prompt = system_prompt
         self.env_input = env_input  # env_class + task
-        self.llm = "gpt-4-1106-preview"
+        self.llm = "gpt-4o"
 
     def query_llm(self, in_context_prompt: str) -> Tuple[str, int, int]:
         response = client.chat.completions.create(
@@ -133,9 +133,11 @@ class TrainPolicy:
             island_id: int,
             baseline: str,
             output_log: str,
+            env_name: str = "HumanoidEnv",
     ):
         self.train_cfg = None
-        self._load_train_cfg()
+        self.env_name = env_name
+        self._load_train_cfg(overrides=[f"environment.name={env_name}"])
 
         self.reward_func_str = reward_fn_str
         self.island_id = island_id
@@ -147,7 +149,7 @@ class TrainPolicy:
             f"Initializing TrainPolicy: generation_id={generation_id}, island_id={island_id}, type(island_id)={type(island_id)}"
         )
 
-    def _load_train_cfg(self):
+    def _load_train_cfg(self, overrides: List[str] = []):
         logging.info("Loading train cfg")
 
         # Ensure ROOT_PATH exists
@@ -166,7 +168,7 @@ class TrainPolicy:
 
         # Initialize Hydra with the relative config path
         with hydra.initialize(config_path=config_relative_path):
-            self.train_cfg = hydra.compose(config_name="train")
+            self.train_cfg = hydra.compose(config_name="train", overrides=overrides)
             logging.info("Training Config loaded")
 
     def train_policy(self) -> Tuple[str, str]:
@@ -212,6 +214,7 @@ class TrainPolicy:
             velocity_file_path,
             self.output_log,
             log_dir,
+            env_name=self.train_cfg.environment.name,
         )
         return checkpoint_file, velocity_file_path
 

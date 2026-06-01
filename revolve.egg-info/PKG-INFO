@@ -1,4 +1,4 @@
-Metadata-Version: 2.2
+Metadata-Version: 2.4
 Name: revolve
 Version: 0.0.0
 Summary: REvolve: Reward Evolution with Large Language Models using Human Feedback
@@ -15,6 +15,7 @@ Classifier: Topic :: Software Development :: Libraries :: Python Modules
 Classifier: License :: OSI Approved :: MIT License
 Requires-Python: >=3.10
 Description-Content-Type: text/markdown
+License-File: LICENSE
 Requires-Dist: openai
 Requires-Dist: hydra-core==1.3.2
 Requires-Dist: scipy
@@ -54,6 +55,7 @@ Requires-Dist: gymnasium-robotics==1.2.4
 Requires-Dist: gymnasium==0.29.1
 Requires-Dist: stable-baselines3==2.3.2
 Requires-Dist: tensorboard==2.10.1
+Dynamic: license-file
 
 # REvolve: Reward Evolution with Large Language Models using Human Feedback
 ******************************************************
@@ -80,6 +82,8 @@ Requires-Dist: tensorboard==2.10.1
 # clone the repository 
 git clone https://github.com/RishiHazra/Revolve.git
 cd Revolve
+conda create -n "revolve" python=3.10
+conda activate revolve
 pip install -e .
 ```
 
@@ -87,7 +91,13 @@ pip install -e .
 ```shell
 export ROOT_PATH='Revolve'
 export OPENAI_API_KEY='<your openai key>'
-python main.py
+python main.py \ 
+        evolution.num_generations=5 \  # number of generations
+        evolution.individuals_per_generation=15 \  # number of individuals in each generation
+        database.num_islands=5 \  # number of groups/populations to start with
+        database.max_island_size=8 \  # max number of samples in each group/population
+        data_paths.run=10 \  # run_id
+        environment.name="HumanoidEnv"  # Choose between "HumanoidEnv" or "AdroitHandDoorEnv"
 ```
 
 *Note, we will soon release the AirSim environment setup script.*
@@ -97,7 +107,7 @@ For AirSim, follow the instruction on this link [https://microsoft.github.io/Air
 export AIRSIM_PATH='AirSim'
 export AIRSIMNH_PATH='AirSimNH/AirSimNH/LinuxNoEditor/AirSimNH.sh'
 ```
-
+ 
 ## Other Utilities
 * The prompts are listed in ```prompts``` folder.
 * Elo scoring in ```human_feedback``` folder
@@ -106,13 +116,13 @@ export AIRSIMNH_PATH='AirSimNH/AirSimNH/LinuxNoEditor/AirSimNH.sh'
 
 ### To cite our paper:
 ```bibtex
-@misc{hazra2024revolverewardevolutionlarge,
-      title={REvolve: Reward Evolution with Large Language Models using Human Feedback}, 
-      author={Rishi Hazra and Alkis Sygkounas and Andreas Persson and Amy Loutfi and Pedro Zuidberg Dos Martires},
-      year={2024},
-      eprint={2406.01309},
-      archivePrefix={arXiv},
-      primaryClass={cs.NE},
-      url={https://arxiv.org/abs/2406.01309}, 
+@inproceedings{hazra2025revolve,
+	title        = {{RE}volve: Reward Evolution with Large Language Models using Human Feedback},
+	author       = {Rishi Hazra and Alkis Sygkounas and Andreas Persson and Amy Loutfi and Pedro Zuidberg Dos Martires},
+	year         = 2025,
+	booktitle    = {The Thirteenth International Conference on Learning Representations},
+	url          = {https://openreview.net/forum?id=cJPUpL8mOw}
 }
 ```
+## License  
+REvolve code is licensed under the [MIT license](https://github.com/RishiHazra/Revolve/blob/main/LICENSE).

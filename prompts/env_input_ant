@@ -1,0 +1,33 @@
+class AntEnv(MujocoEnv, utils.EzPickle):
+    """
+    ## Description
+    This environment is based on a 3D four-legged robot (Ant).
+    The goal is to walk forward (in the positive x-direction) as fast as possible.
+
+    ## Action Space
+    The action space is a `Box(-1.0, 1.0, (8,), float32)`. The control actions are forces/torques applied at the hinge joints.
+
+    ## Observation Space
+    The observation is a `Box(-Inf, Inf, (27,), float64)`. The elements correspond to the following:
+    - obs[0]: z-coordinate of the torso (height of the body)
+    - obs[1:5]: orientation of the torso (quaternion)
+    - obs[5:13]: 8 joint angles
+    - obs[13:16]: 3D velocity of the torso (x, y, z) -> torso_x_velocity is obs[13]
+    - obs[16:19]: 3D angular velocity of the torso
+    - obs[19:27]: 8 joint angular velocities
+
+    Key indicators for rewards:
+    - torso_z_pos = observation[0]
+    - torso_x_velocity = observation[13]
+
+    ## Episode End
+    The ant is said to be unhealthy if the z-position of the torso is no longer contained in the healthy_z_range (0.2 to 1.0).
+    The episode ends (terminates) when the ant becomes unhealthy or flips.
+
+    def _get_obs(self):
+        position = self.data.qpos.flat.copy()
+        velocity = self.data.qvel.flat.copy()
+        # Excludes x and y positions (indices 0 and 1)
+        observation = np.concatenate((position[2:], velocity))
+        return observation
+    """

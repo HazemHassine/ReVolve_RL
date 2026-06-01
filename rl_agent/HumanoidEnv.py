@@ -527,10 +527,10 @@ class HumanoidEnv(MujocoEnv, utils.EzPickle):
 
     def render(self, render_mode="human"):
         if render_mode == "rgb_array":
-            return self.mujoco_renderer.render(render_mode="offscreen", camera_id=0)
+            return self.mujoco_renderer.render(render_mode="rgb_array", camera_id=0)
         elif render_mode == "depth_array":
             return self.mujoco_renderer.render(
-                render_mode="offscreen", camera_id=0, depth=True
+                render_mode="depth_array", camera_id=0, depth=True
             )
         else:
             self.mujoco_renderer.render(render_mode="human")

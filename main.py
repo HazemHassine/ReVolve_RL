@@ -100,7 +100,10 @@ def main(cfg):
     env_name = cfg.environment.name
 
     system_prompt = prompts.types["system_prompt"]
-    env_input_prompt = prompts.types["env_input_prompt"]
+    if env_name == "AntEnv":
+        env_input_prompt = prompts.types["env_input_ant_prompt"]
+    else:
+        env_input_prompt = prompts.types["env_input_prompt"]
 
     reward_generation = RewardFunctionGeneration(
         system_prompt=system_prompt, env_input=env_input_prompt
@@ -202,6 +205,7 @@ def main(cfg):
                         island_id,
                         cfg.evolution.baseline,  # cfg.evolution.baseline
                         cfg.database.rewards_dir,
+                        cfg.environment.name,
                     )
                 )
                 rew_fn_strings.append(reward_func_str)
